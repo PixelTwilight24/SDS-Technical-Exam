@@ -18,7 +18,7 @@
 </div>
 
 <div class="mt-3">
-    <form action="@Url.Action("DeletePost", "RecyclableTypes", new { id = Model.Id })" method="post">
+    <form action="@Url.Action("DeletePost", "RecyclableType", new { id = Model.Id })" method="post">
         <button type="submit" class="btn btn-success">Delete</button>
         <a href="@Url.Action("List", "RecyclableType")" class="btn btn-danger">Cancel</a>
     </form>
