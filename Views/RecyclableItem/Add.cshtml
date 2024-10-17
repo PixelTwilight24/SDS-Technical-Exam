@@ -1,0 +1,86 @@
+﻿@model SDS_Technical_Exam.Models.RecyclableItem
+
+@{
+    ViewBag.Title = "Create Recyclable Item";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Create New Recyclable Item</h2>
+
+@using (Html.BeginForm("CreateEditForm", "RecyclableItem", FormMethod.Post))
+{
+    <div class="form-group">
+        @Html.Label("Recyclable Type")
+        <select id="recyclableTypeDropdown" name="RecyclableTypeId" class="form-control" required>
+            <option value="">Select Recyclable Type</option>
+            @foreach (var type in ViewBag.RecyclableTypes as List<SDS_Technical_Exam.Models.RecyclableType>)
+            {
+                <option value="@type.Id" data-minKg="@type.MinKg" data-rate="@type.Rate")>@type.Type</option>
+            }
+        </select>
+        @Html.ValidationMessage("RecyclableTypeId", "", new { @class = "text-danger" }) 
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.ItemDescription)
+        @Html.TextBoxFor(m => m.ItemDescription, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.ItemDescription, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Weight)
+        @Html.TextBoxFor(m => m.Weight, new { @class = "form-control", type = "number", step = "0.01", min = "0", required = "required", id = "weightInput" })
+        @Html.ValidationMessageFor(m => m.Weight, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.ComputedRate)
+        @Html.TextBox("ComputedRate", null, new { @class = "form-control", @readonly = "readonly", id = "computedRateInput" })
+        @Html.ValidationMessageFor(m => m.ComputedRate, "", new { @class = "text-danger" })
+    </div>
+
+    <div class="mt-3 form-group">
+        <button type="submit" class="btn btn-success">Save</button>
+        <button type="reset" class="btn btn-secondary">Reset</button>
+        <a href="@Url.Action("List", "RecyclableItem")" class="btn btn-danger">Cancel</a>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script>
+        $(document).ready(function () {
+            // Function to calculate the computed rate
+            function calculateComputedRate() {
+                var selectedType = $('#recyclableTypeDropdown option:selected');
+                var rate = parseFloat(selectedType.data('rate')) || 0; // Get the rate from data attribute
+                var weight = parseFloat($('#weightInput').val()) || 0; // Get the weight value
+
+                // Calculate the computed rate
+                var computedRate = rate * weight;
+
+                // Set the computed rate in the input field
+                $('#computedRateInput').val(computedRate.toFixed(2)); // Format to 2 decimal places
+            }
+
+            // Function to set the min and max of the weight input field
+            function updateWeightLimits() {
+                var selectedType = $('#recyclableTypeDropdown option:selected');
+                var minKg = parseFloat(selectedType.data('minkg')) || 0; // Get the MinKg from the data attribute
+                var maxKg = parseFloat(selectedType.data('maxkg')) || 1000000; // Get the MaxKg or set a high value as default if not provided
+
+                // Update the min and max attributes of the weight input field
+                $('#weightInput').attr('min', minKg);
+                $('#weightInput').attr('max', maxKg);
+            }
+
+            // Event listeners for weight input and dropdown change
+            $('#weightInput').on('input', calculateComputedRate);
+            $('#recyclableTypeDropdown').change(function () {
+                calculateComputedRate();
+                updateWeightLimits(); // Update the weight field limits based on the selected recyclable type
+            });
+            updateWeightLimits();
+        });
+    </script>
+}

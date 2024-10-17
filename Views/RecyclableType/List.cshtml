@@ -1,0 +1,50 @@
+﻿@model IEnumerable<SDS_Technical_Exam.Models.RecyclableType>
+
+@{
+    ViewBag.Title = "List of Recyclable Types";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>List of Recyclable Types</h2>
+
+<!-- Button to create a new recyclable type -->
+<div>
+    <a href="@Url.Action("Add", "RecyclableType")" class="btn btn-primary">Create New Recyclable Type</a>
+</div>
+
+@if (Model == null || !Model.Any())
+{
+    <p>No recyclable types found.</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Type</th>
+                <th>Rate</th>
+                <th>Minimum Kg</th>
+                <th>Maximum Kg</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var recyclableType in Model)
+            {
+                <tr>
+                    <td>@recyclableType.Type</td>
+                    <td>@recyclableType.Rate.ToString("C")</td>
+                    <td>@recyclableType.MinKg</td>
+                    <td>@recyclableType.MaxKg</td>
+                    <td>
+                        <!-- Edit button -->
+                        <a href="@Url.Action("Edit", "RecyclableType", new { id = recyclableType.Id})" class="btn btn-info btn-sm">Edit</a>
+                        <a href="@Url.Action("Delete", "RecyclableType", new { id = recyclableType.Id})" class="btn btn-danger btn-sm">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+

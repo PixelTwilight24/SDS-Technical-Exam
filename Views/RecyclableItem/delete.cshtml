@@ -1,0 +1,27 @@
+﻿@model SDS_Technical_Exam.Models.RecyclableItem
+
+@{
+    ViewBag.Title = "Delete Recyclable Item";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Delete Recyclable Item</h2>
+
+<div class="alert alert-danger">
+    Are you sure you want to delete this item?
+</div>
+
+<div>
+    <strong>Recyclable Type:</strong> @Model.RecyclableType.Type <br />
+    <strong>Description:</strong> @Model.ItemDescription <br />
+    <strong>Rate:</strong> @Model.ComputedRate <br />
+    <strong>Weight:</strong> @Model.Weight <br />
+</div>
+
+<div class="mt-3">
+    <form action="@Url.Action("DeletePost", "RecyclableItem", new { id = Model.Id })" method="post">
+        <button type="submit" class="btn btn-success">Delete</button>
+        <a href="@Url.Action("List", "RecyclableItem")" class="btn btn-danger">Cancel</a>
+    </form>
+</div>
+
